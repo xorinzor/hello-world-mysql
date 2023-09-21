@@ -28,19 +28,21 @@
 
 		<div style="text-align: center;">
 			<?php
+				$conn = false;
+
 				try {
-					$conn = @mysqli_connect($host, $user, $pass, $db);
+					$conn = mysqli_connect($host, $user, $pass, $db);
 				}
-				catch($e) 
+				catch(Exception $e) 
 				{ 
-				?>
+			?>
 					<div class="error-msg">
 						<p>
 							<strong>Error:</strong><br />
 							<?= $e->getMessage(); ?>
 						</p>
 					</div>
-				<?php 
+			<?php 
 				}
 
 				if($conn):
