@@ -27,7 +27,7 @@
 				justify-content: center;
 				align-items: center;
 				flex-direction: column;
-				box-shadow: 0 2px 10px 10px rgba(#000, 0.05);
+				box-shadow: 0 2px 10px 10px #0000000a;
 			}
 
 			/**
