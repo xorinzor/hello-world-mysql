@@ -1,7 +1,8 @@
 # hello-world-mysql
 Simple "Hello World" docker image that can be used to test MySQL connectivity.
-
 Uses the [trafex/php-nginx](https://hub.docker.com/r/trafex/php-nginx) as underlying image. I simply add the index.php file.
+
+Image name: `xorinzor/hello-world-mysql:latest`
 
 ## Usage
 Provide the environment variables below:
