@@ -1,3 +1,9 @@
+<?php
+	$host = getenv('sql_host');
+	$db = getenv('sql_db');
+	$user = getenv('sql_user');
+	$pass = getenv('sql_pass');
+?>
 <html>
 	<head>
 		<title>Hello, World!</title>
@@ -17,18 +23,12 @@
 		<h1>Hello, World</h1>
 
 		<p>
-			Connecting to <strong><?= $_ENV['sql_host']; ?></strong> (db: <strong><?= $_ENV['sql_db']; ?></strong>) using user: <strong><?= $_ENV['sql_user']; ?></strong>
+			Connecting to <strong><?= $host; ?></strong> (db: <strong><?= $db; ?></strong>) using user: <strong><?= $user; ?></strong>
 		</p>
 
 		<div style="text-align: center;">
 			<?php
-				// We don't want any output.
-				ob_start();
-
-				$conn = @mysqli_connect($_ENV['sql_host'], $_ENV['sql_user'], $_ENV['sql_pass'], $_ENV['sql_db']);
-
-				// Discard all output
-				ob_end_clean();
+				$conn = @mysqli_connect($host, $user, $pass, $db);
 
 				if($conn):
 			?>
