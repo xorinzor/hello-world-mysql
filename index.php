@@ -3,6 +3,8 @@
 	$db = getenv('sql_db');
 	$user = getenv('sql_user');
 	$pass = getenv('sql_pass');
+	$useSsl = getenv('sql_ssl') == 'true' ?? false;
+	$verifySsl = getenv('sql_ssl_verify') == 'true' ?? false;
 ?>
 <html>
 	<head>
@@ -20,53 +22,70 @@
 		</style>
 	</head>
 	<body>
-		<h1>Hello, World</h1>
-
-		<p>
-			Connecting to <strong><?= $host; ?></strong> (db: <strong><?= $db; ?></strong>) using user: <strong><?= $user; ?></strong>
-		</p>
-
 		<div style="text-align: center;">
-			<?php
-				$conn = false;
+			<div style="max-width: 800px">
+				<h1>Hello, World</h1>
 
-				try {
-					$conn = mysqli_connect($host, $user, $pass, $db);
-				}
-				catch(Exception $e) 
-				{ 
-			?>
-					<div class="error-msg">
-						<p>
-							<strong>Error:</strong><br />
-							<?= $e->getMessage(); ?>
-						</p>
+				<p>
+					Connecting to <strong><?= $host; ?></strong><br />
+					With User: <strong><?= $user; ?></strong><br />
+					To Database: <strong><?= $db; ?></strong><br />
+					<strong><?= $useSsl ? "With" : "Without" ?></strong> SSL.
+				</p>
+
+			
+				<?php
+					$conn = false;
+
+					try {
+						$mysqli = mysqli_init();
+
+						if($useSsl) {
+							if($verifySsl) {
+								$mysqli->options(MYSQLI_CLIENT_SSL, true);
+							} else {
+								$mysqli->options(MYSQLI_CLIENT_SSL_DONT_VERIFY_SERVER_CERT, true);
+							}
+						}
+
+						$conn = $mysqli->real_connect($host, $user, $pass, $db);
+						$mysqli->close();
+					}
+					catch(Exception $e) 
+					{ 
+				?>
+						<div class="error-msg">
+							<p>
+								<strong>Error:</strong><br />
+								<?= $e->getMessage(); ?>
+							</p>
+						</div>
+				<?php 
+					}
+
+					if($conn):
+				?>
+					<h2>SQL Connection success!</h2>
+					<div class="success-checkmark">
+					  <div class="check-icon">
+					    <span class="icon-line line-tip"></span>
+					    <span class="icon-line line-long"></span>
+					    <div class="icon-circle"></div>
+					    <div class="icon-fix"></div>
+					  </div>
 					</div>
-			<?php 
-				}
-
-				if($conn):
-			?>
-				<h2>SQL Connection success!</h2>
-				<div class="success-checkmark">
-				  <div class="check-icon">
-				    <span class="icon-line line-tip"></span>
-				    <span class="icon-line line-long"></span>
-				    <div class="icon-circle"></div>
-				    <div class="icon-fix"></div>
-				  </div>
-				</div>
-			<?php
-				else:
-			?>
-				<h2>Failed to connect to SQL Server</h2>
-				<div class="circle-border"></div>
-				<div class="circle">
-					<div class="error"></div>
-				</div>
-			<?php
-				endif;
-			?>
+				<?php
+					else:
+				?>
+					<h2>Failed to connect to SQL Server</h2>
+					<div class="circle-border"></div>
+					<div class="circle">
+						<div class="error"></div>
+					</div>
+				<?php
+					endif;
+				?>
+			</div>
 		</div>
 	</body>
 </html>
