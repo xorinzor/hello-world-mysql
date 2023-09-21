@@ -10,6 +10,25 @@
 	<head>
 		<title>Hello, World!</title>
 		<style type="text/css" rel="stylesheet">
+			body {
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				width: 100vw;
+				height: 100vh;
+				background: #b0bbb7;
+			}
+
+			.container {
+				background-color: white;
+				height: 500px;
+				width: 700px;
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				box-shadow: 0 2px 10px 10px rgba(#000, 0.05);
+			}
+
 			/**
 			 * Credits: https://codepen.io/cvan/pen/LYYXzWZ
 			 */
@@ -22,69 +41,66 @@
 		</style>
 	</head>
 	<body>
-		<div style="text-align: center;">
-			<div style="max-width: 800px">
-				<h1>Hello, World</h1>
+		<div class="container">
+			<h1>Hello, World</h1>
 
-				<p>
-					Connecting to <strong><?= $host; ?></strong><br />
-					With User: <strong><?= $user; ?></strong><br />
-					To Database: <strong><?= $db; ?></strong><br />
-					<strong><?= $useSsl ? "With" : "Without" ?></strong> SSL.
-					<strong><?= $verifySsl ? "With" : "Without" ?></strong> SSL Certificate Verification.
-				</p>
+			<p>
+				Connecting to <strong><?= $host; ?></strong><br />
+				With User: <strong><?= $user; ?></strong><br />
+				To Database: <strong><?= $db; ?></strong><br />
+				<strong><?= $useSsl ? "With" : "Without" ?></strong> SSL.<br />
+				<strong><?= $verifySsl ? "With" : "Without" ?></strong> SSL Server Certificate Validation.
+			</p>
+		
+			<?php
+				$conn = false;
 
-			
-				<?php
-					$conn = false;
+				try {
+					$mysqli = mysqli_init();
 
-					try {
-						$mysqli = mysqli_init();
-
-						$flags = 0;
-						if($useSsl) {
-							$flags |= MYSQLI_CLIENT_SSL;
-							$mysqli->options(MYSQLI_OPT_SSL_VERIFY_SERVER_CERT, $verifySsl);
-						}
-
-						$conn = $mysqli->real_connect($host, $user, $pass, $db, null, null, $flags);
-						$mysqli->close();
-					}
-					catch(Exception $e) 
-					{ 
-				?>
-						<div class="error-msg">
-							<p>
-								<strong>Error:</strong><br />
-								<?= $e->getMessage(); ?>
-							</p>
-						</div>
-				<?php 
+					$flags = 0;
+					if($useSsl) {
+						$flags |= MYSQLI_CLIENT_SSL;
+						$mysqli->options(MYSQLI_OPT_SSL_VERIFY_SERVER_CERT, $verifySsl);
 					}
 
-					if($conn):
-				?>
-					<h2>SQL Connection success!</h2>
-					<div class="success-checkmark">
-					  <div class="check-icon">
-					    <span class="icon-line line-tip"></span>
-					    <span class="icon-line line-long"></span>
-					    <div class="icon-circle"></div>
-					    <div class="icon-fix"></div>
-					  </div>
+					$conn = $mysqli->real_connect($host, $user, $pass, $db, null, null, $flags);
+					$mysqli->close();
+				}
+				catch(Exception $e) 
+				{ 
+			?>
+					<div class="error-msg">
+						<p>
+							<strong>Error:</strong><br />
+							<?= $e->getMessage(); ?>
+						</p>
 					</div>
-				<?php
-					else:
-				?>
-					<h2>Failed to connect to SQL Server</h2>
-					<div class="circle-border"></div>
-					<div class="circle">
-						<div class="error"></div>
-					</div>
-				<?php
-					endif;
-				?>
-			</div>
+			<?php 
+				}
+
+				if($conn):
+			?>
+				<h2>SQL Connection success!</h2>
+				<div class="success-checkmark">
+				  <div class="check-icon">
+				    <span class="icon-line line-tip"></span>
+				    <span class="icon-line line-long"></span>
+				    <div class="icon-circle"></div>
+				    <div class="icon-fix"></div>
+				  </div>
+				</div>
+			<?php
+				else:
+			?>
+				<h2>Failed to connect to SQL Server</h2>
+				<div class="circle-border"></div>
+				<div class="circle">
+					<div class="error"></div>
+				</div>
+			<?php
+				endif;
+			?>
 		</div>
 	</body>
 </html>
