@@ -26,6 +26,7 @@
 				display: flex;
 				justify-content: center;
 				align-items: center;
+				flex-direction: column;
 				box-shadow: 0 2px 10px 10px rgba(#000, 0.05);
 			}
 
@@ -81,7 +82,7 @@
 
 				if($conn):
 			?>
-				<h2>SQL Connection success!</h2>
+				<h2>MySQL Connection success!</h2>
 				<div class="success-checkmark">
 				  <div class="check-icon">
 				    <span class="icon-line line-tip"></span>
@@ -93,7 +94,7 @@
 			<?php
 				else:
 			?>
-				<h2>Failed to connect to SQL Server</h2>
+				<h2>Failed to connect to MySQL Server</h2>
 				<div class="circle-border"></div>
 				<div class="circle">
 					<div class="error"></div>
