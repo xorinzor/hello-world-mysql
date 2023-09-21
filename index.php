@@ -31,6 +31,7 @@
 					With User: <strong><?= $user; ?></strong><br />
 					To Database: <strong><?= $db; ?></strong><br />
 					<strong><?= $useSsl ? "With" : "Without" ?></strong> SSL.
+					<strong><?= $verifySsl ? "With" : "Without" ?></strong> SSL Certificate Verification.
 				</p>
 
 			
@@ -40,15 +41,13 @@
 					try {
 						$mysqli = mysqli_init();
 
+						$flags = 0;
 						if($useSsl) {
-							if($verifySsl) {
-								$mysqli->options(MYSQLI_CLIENT_SSL, true);
-							} else {
-								$mysqli->options(MYSQLI_CLIENT_SSL_DONT_VERIFY_SERVER_CERT, true);
-							}
+							$flags |= MYSQLI_CLIENT_SSL;
+							$mysqli->options(MYSQLI_OPT_SSL_VERIFY_SERVER_CERT, $verifySsl);
 						}
 
-						$conn = $mysqli->real_connect($host, $user, $pass, $db);
+						$conn = $mysqli->real_connect($host, $user, $pass, $db, null, null, $flags);
 						$mysqli->close();
 					}
 					catch(Exception $e) 
