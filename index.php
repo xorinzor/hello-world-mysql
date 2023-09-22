@@ -95,9 +95,11 @@
 				else:
 			?>
 				<h2>Failed to connect to MySQL Server</h2>
-				<div class="circle-border"></div>
-				<div class="circle">
-					<div class="error"></div>
+				<div>
+					<div class="circle-border"></div>
+					<div class="circle">
+						<div class="error"></div>
+					</div>
 				</div>
 			<?php
 				endif;
