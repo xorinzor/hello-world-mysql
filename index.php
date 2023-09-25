@@ -17,6 +17,7 @@
 				width: 100vw;
 				height: 100vh;
 				background: #b0bbb7;
+				margin: 0;
 			}
 
 			.container {
