@@ -3,8 +3,28 @@
 	$db = getenv('sql_db');
 	$user = getenv('sql_user');
 	$pass = getenv('sql_pass');
-	$useSsl = getenv('sql_ssl') == 'true' ?? false;
-	$verifySsl = getenv('sql_ssl_verify') == 'true' ?? false;
+	$useSsl = getenv('sql_ssl') === true || getenv('sql_ssl') === "true";
+	$verifySsl = getenv('sql_ssl_verify') === true || getenv('sql_ssl_verify') === "true";
+
+	$conn = false;
+	$error = null;
+
+	try {
+		$mysqli = mysqli_init();
+
+		$flags = 0;
+		if($useSsl) {
+			$flags |= MYSQLI_CLIENT_SSL;
+			$mysqli->options(MYSQLI_OPT_SSL_VERIFY_SERVER_CERT, $verifySsl);
+		}
+
+		$conn = $mysqli->real_connect($host, $user, $pass, $db, null, null, $flags);
+		$mysqli->close();
+	}
+	catch(Exception $e) 
+	{ 
+		$error = $e->getMessage();
+	}
 ?>
 <html>
 	<head>
@@ -55,22 +75,7 @@
 			</p>
 		
 			<?php
-				$conn = false;
-
-				try {
-					$mysqli = mysqli_init();
-
-					$flags = 0;
-					if($useSsl) {
-						$flags |= MYSQLI_CLIENT_SSL;
-						$mysqli->options(MYSQLI_OPT_SSL_VERIFY_SERVER_CERT, $verifySsl);
-					}
-
-					$conn = $mysqli->real_connect($host, $user, $pass, $db, null, null, $flags);
-					$mysqli->close();
-				}
-				catch(Exception $e) 
-				{ 
+				if($error):
 			?>
 					<div class="error-msg">
 						<p>
@@ -79,7 +84,7 @@
 						</p>
 					</div>
 			<?php 
-				}
+				endif;
 
 				if($conn):
 			?>
